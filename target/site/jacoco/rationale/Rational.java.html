@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Rational.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">csce331-testing-rational</a> &gt; <a href="index.source.html" class="el_package">rationale</a> &gt; <span class="el_source">Rational.java</span></div><h1>Rational.java</h1><pre class="source lang-java linenums">package rationale;
+
+public class Rational {
+
+    private int numerator;
+    private int denominator;
+
+    private int gcd(int a, int b) {
+<span class="fc bfc" id="L9" title="All 2 branches covered.">      while (b != 0) {</span>
+<span class="fc" id="L10">          int temp = b;</span>
+<span class="fc" id="L11">          b = a % b;</span>
+<span class="fc" id="L12">          a = temp;</span>
+<span class="fc" id="L13">      }</span>
+<span class="fc" id="L14">      return Math.abs(a);</span>
+    }
+ 
+<span class="fc" id="L17">    public Rational(int a, int b) {</span>
+<span class="fc bfc" id="L18" title="All 2 branches covered.">       if (b == 0) {</span>
+<span class="fc" id="L19">           throw new IllegalArgumentException(&quot;Denominator cannot be zero&quot;);</span>
+       }
+       //if both negative, you can simplify by making both positive
+<span class="fc bfc" id="L22" title="All 4 branches covered.">       if (a &lt; 0 &amp;&amp; b &lt; 0) {</span>
+<span class="fc" id="L23">         a = -1 * a;</span>
+<span class="fc" id="L24">         b = -1 * b;</span>
+      }
+       
+ 
+       // Find the greatest common divisor
+<span class="fc" id="L29">       int gcd = gcd(Math.abs(a), Math.abs(b));</span>
+ 
+       // negative sign -&gt; numerator
+<span class="fc bfc" id="L32" title="All 2 branches covered.">       if (b &lt; 0) {</span>
+<span class="fc" id="L33">           gcd = -gcd;</span>
+       }
+ 
+<span class="fc" id="L36">       this.numerator = a / gcd;</span>
+<span class="fc" id="L37">       this.denominator = b / gcd;</span>
+<span class="fc" id="L38">   }</span>
+ 
+    public Rational(int a) {
+<span class="fc" id="L41">       this(a, 1);</span>
+<span class="fc" id="L42">    }</span>
+ 
+    public Rational(){
+<span class="fc" id="L45">       this(0);</span>
+<span class="fc" id="L46">    }</span>
+ 
+    public int numerator() {
+<span class="fc" id="L49">       return numerator;</span>
+    }
+ 
+    public int denominator() {
+<span class="fc" id="L53">       return denominator;</span>
+    }
+ }
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
