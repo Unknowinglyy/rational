@@ -242,11 +242,8 @@ public class Rational extends Number implements Comparable<Number>{
          else if(this.lessThan(o)){
             return -1;
          }
-         else if(this.equals(o)){
-            return 0;
-         }
          else{
-            return -2;
+            return 0;
          }
       }
       else{
