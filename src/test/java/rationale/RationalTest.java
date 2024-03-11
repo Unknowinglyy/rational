@@ -25,6 +25,10 @@ public class RationalTest
         Rational value = new Rational();
         assertThat("the numerator should be 0", value.numerator(), is(0));
         assertThat("the denominator should be 1", value.denominator(), is(1));
+
+
+
+        //TODO: test for different input values like strings, bools, etc.
     }
 
     public void test1argConstructor() {
@@ -42,6 +46,8 @@ public class RationalTest
         Rational value3 = new Rational(0);
         assertThat("the numerator should be 0", value3.numerator(), is(0));
         assertThat("the denominator should be 1", value.denominator(), is(1));
+
+        //TODO: test for different input values like strings, bools, etc.
     }
 
     public void test2argConsturctor() {
@@ -129,5 +135,48 @@ public class RationalTest
         Rational value16 = new Rational(-10, -2);
         assertThat("-10 / -2 = 5 / 1", value16.numerator(), is(5));
         assertThat("-10 / -2 = 5 / 1", value16.denominator(), is(1));
+
+        //TODO: test for different input values like strings, bools, etc.
+    }
+
+    public void testcopyConstructor(){
+        Rational original = new Rational(2,3);
+        Rational value = new Rational(original);
+        assertThat("the numerator should be 2", value.numerator(), is(2));
+        assertThat("the denominator should be 3", value.denominator(), is(3));
+
+        // original.change(1,2);
+        // assertThat("the numerator should be 1", original.numerator(), is(1));
+        // assertThat("the denominoatr should be 2", original.denominator(), is(2));
+
+        //TODO: test for different input values like strings, bools, etc.
+    }
+
+    public void testOpposite(){
+        Rational original = new Rational(2,3);
+        Rational value2 = original.opposite();
+        assertThat("the numerator should be -2", value2.numerator(), is(-2));
+        assertThat("the denominator should be 3", value2.denominator(), is(3));
+
+        //original isnt changed
+        assertThat("the numerator should be 2", original.numerator(),is(2));
+        assertThat("the denominator should be 3", original.denominator(), is(3));
+
+        //can I go back?
+        Rational value3 = value2.opposite();
+        assertThat("the numerator should be 2", value3.numerator(),is(2));
+        assertThat("the denominator should be 3", value3.denominator(), is(3));
+
+        //TODO: test for different input values like strings, bools, etc.
+    }
+
+    public void testReciprocal(){
+        Rational value1 = new Rational(2,3);
+        Rational reciprocal = value1.reciprocal();
+        assertThat("the numerator should be 3", reciprocal.numerator(), is(3));
+        assertThat("the denominator should be 2", reciprocal.denominator(), is(2));
+
+        Rational value2 = new Rational(0);
+        assertThrows(IllegalArgumentException.class, value2::reciprocal);
     }
 }
