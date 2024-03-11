@@ -1,6 +1,6 @@
 package numbers;
 
-public class Rational {
+public class Rational extends Number implements Comparable<Number>{
 
     private int numerator;
     private int denominator;
@@ -121,10 +121,10 @@ public class Rational {
       else{
          if(n < 0){
             //if negative exponent, make it positive and flip the fraction
-            n = -n;
+            int newN = -n;
             
-            int newNumerator = (int) Math.pow(this.denominator, n);
-            int newDenominator = (int) Math.pow(this.numerator, n);
+            int newNumerator = (int) Math.pow(this.denominator, newN);
+            int newDenominator = (int) Math.pow(this.numerator, newN);
 
             Rational newRational = new Rational(newNumerator, newDenominator);
             return newRational;
@@ -137,5 +137,145 @@ public class Rational {
       }
    }
 
-   public 
+   public boolean equals(Object o){
+      if (o != null && o instanceof Integer){
+         //no integer is equal to a rational number that has a non-one denominator
+         if(this.denominator != 1){
+            return false;
+         }
+         else if (o.equals(this.numerator)){
+            return true;
+         }
+         else{
+            return false;
+         }
+      }
+      else if(o != null && o instanceof Float){
+         //Rational number represented as float
+         float fRational = (float) this.numerator / this.denominator;
+         float diff = Math.abs(fRational - ((Float)o).floatValue());
+         float check = (float) Math.pow(2, -20);
+         if(diff < check){
+            return true;
+         }
+         else{
+            return false;
+         }
+      }
+      else if(o != null && o instanceof Double){
+         //Rational number represented as double
+         double dRational = (double) this.numerator / this.denominator;
+         double diff = Math.abs(dRational - ((Double)o).doubleValue());
+         double check = Math.pow(2,-40);
+         if(diff < check){
+            return true;
+         }
+         else{
+            return false;
+         }
+      }
+      else{
+         return false;
+      }
+   }
+
+   public boolean greaterThan(Number n){
+      double dRational = (double) this.numerator / this.denominator;
+      if(dRational > n.doubleValue()){
+         return true;
+      }
+      else{
+         return false;
+      }
+   }
+
+   public boolean greaterThan(Rational r){
+      //takes use of the previous function
+      double comparison = (double) r.numerator / r.denominator;
+      return this.greaterThan(comparison);
+   }
+
+   public boolean lessThan(Number n){
+      double dRational = (double) this.numerator / this.denominator;
+      if(dRational < n.doubleValue()){
+         return true;
+      }
+      else{
+         return false;
+      }
+   }
+
+   public boolean lessThan(Rational r){
+      double comparison = (double) r.numerator / r.denominator;
+      return this.lessThan(comparison);
+   }
+
+   public boolean isZero(){
+      return this.numerator == 0;
+   }
+
+   public boolean isOne(){
+      return this.numerator == 1;
+   }
+
+   public boolean isMinusOne(){
+      return this.numerator == -1;
+   }
+
+   @Override
+   public String toString(){
+      if(this.denominator == 1){
+         return String.valueOf(this.numerator);
+      }
+      else{
+         return String.valueOf(this.numerator) + "/" + String.valueOf(this.denominator);
+      }
+   }
+   
+
+   @Override
+   public int compareTo(Number o) {
+      if(o != null){
+         if(this.greaterThan(o)){
+            return 1;
+         }
+         else if(this.lessThan(o)){
+            return -1;
+         }
+         else if(this.equals(o)){
+            return 0;
+         }
+         else{
+            return -2;
+         }
+      }
+      else{
+         //going to be the error code for this function
+         return -2;
+      }
+   }
+
+   // @Override
+   // public int intValue() {
+   //    // TODO Auto-generated method stub
+   //    throw new UnsupportedOperationException("Unimplemented method 'intValue'");
+   // }
+
+   // @Override
+   // public long longValue() {
+   //    // TODO Auto-generated method stub
+   //    throw new UnsupportedOperationException("Unimplemented method 'longValue'");
+   // }
+
+   // @Override
+   // public float floatValue() {
+   //    // TODO Auto-generated method stub
+   //    throw new UnsupportedOperationException("Unimplemented method 'floatValue'");
+   // }
+
+   // @Override
+   // public double doubleValue() {
+   //    // TODO Auto-generated method stub
+   //    throw new UnsupportedOperationException("Unimplemented method 'doubleValue'");
+   // }
 }
