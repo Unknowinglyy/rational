@@ -542,10 +542,10 @@ public class RationalTest
         assertThat("0 / 1 in long form is 0l", result4, is(0l));
     }
 
-    public void floatValue(){
+    public void testFloatValue(){
         Rational value1 = new Rational(1,3);
         float result = value1.floatValue();
-        assertThat("1 / 3 in float form is 0f", result, is(0f));
+        assertThat("1 / 3 in float form is 0.33333334f", result, is(0.33333334f));
 
         Rational value2 = new Rational(100000,1);
         float result2 = value2.floatValue();
@@ -560,10 +560,10 @@ public class RationalTest
         assertThat("0 / 1 in float form is 0f", result4, is(0f));
     }
 
-    public void doubleValue(){
+    public void testDoubleValue(){
         Rational value1 = new Rational(1,3);
         double result = value1.doubleValue();
-        assertThat("1 / 3 in double form is 0d", result, is(0d));
+        assertThat("1 / 3 in double form is 0.3333333333333333d", result, is(0.3333333333333333d));
 
         Rational value2 = new Rational(100000,1);
         double result2 = value2.doubleValue();
