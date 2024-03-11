@@ -505,4 +505,76 @@ public class RationalTest
         int result5 = value5.compareTo(null);
         assertThat("1 / 2 has no relation to null", result5, is(-2));
     }
+
+    public void testIntValue(){
+        Rational value1 = new Rational(5,2);
+        int result = value1.intValue();
+        assertThat("5 / 2 in integer form is 2", result, is(2));
+
+        Rational value2 = new Rational(8,1);
+        int result2 = value2.intValue();
+        assertThat("8 / 1 in integer form is 8", result2, is(8));
+
+        Rational value3 = new Rational(1,6);
+        int result3 = value3.intValue();
+        assertThat("1 / 6 in integer form is 0", result3, is(0));
+
+        Rational value4 = new Rational();
+        int result4 = value4.intValue();
+        assertThat("0 / 1 in integer form is 0", result4, is(0));
+    }
+
+    public void testLongValue(){
+        Rational value1 = new Rational(1,3);
+        long result = value1.longValue();
+        assertThat("1 / 3 in long form is 0l", result, is(0l));
+
+        Rational value2 = new Rational(100000,1);
+        long result2 = value2.longValue();
+        assertThat("100000 / 1 in long form is 100000l", result2, is(100000l));
+
+        Rational value3 = new Rational(-10, 2);
+        long result3 = value3.longValue();
+        assertThat("-10 / 2 in long form is -5l", result3, is(-5l));
+
+        Rational value4 = new Rational();
+        long result4 = value4.longValue();
+        assertThat("0 / 1 in long form is 0l", result4, is(0l));
+    }
+
+    public void floatValue(){
+        Rational value1 = new Rational(1,3);
+        float result = value1.floatValue();
+        assertThat("1 / 3 in float form is 0f", result, is(0f));
+
+        Rational value2 = new Rational(100000,1);
+        float result2 = value2.floatValue();
+        assertThat("100000 / 1 in float form is 100000f", result2, is(100000f));
+
+        Rational value3 = new Rational(-10, 2);
+        float result3 = value3.floatValue();
+        assertThat("-10 / 2 in float form is -5f", result3, is(-5f));
+
+        Rational value4 = new Rational();
+        float result4 = value4.floatValue();
+        assertThat("0 / 1 in float form is 0f", result4, is(0f));
+    }
+
+    public void doubleValue(){
+        Rational value1 = new Rational(1,3);
+        double result = value1.doubleValue();
+        assertThat("1 / 3 in double form is 0d", result, is(0d));
+
+        Rational value2 = new Rational(100000,1);
+        double result2 = value2.doubleValue();
+        assertThat("100000 / 1 in double form is 100000d", result2, is(100000d));
+
+        Rational value3 = new Rational(-10, 2);
+        double result3 = value3.doubleValue();
+        assertThat("-10 / 2 in double form is -5d", result3, is(-5d));
+
+        Rational value4 = new Rational();
+        double result4 = value4.doubleValue();
+        assertThat("0 / 1 in double form is 0d", result4, is(0d));
+    }
 }

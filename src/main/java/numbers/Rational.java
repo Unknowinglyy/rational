@@ -255,27 +255,28 @@ public class Rational extends Number implements Comparable<Number>{
       }
    }
 
-   // @Override
-   // public int intValue() {
-   //    // TODO Auto-generated method stub
-   //    throw new UnsupportedOperationException("Unimplemented method 'intValue'");
-   // }
+   @Override
+   public int intValue() {
+      if(this.denominator == 1){
+         return this.numerator;
+      }
+      else{
+         return this.numerator / this.denominator;
+      }
+   }
 
-   // @Override
-   // public long longValue() {
-   //    // TODO Auto-generated method stub
-   //    throw new UnsupportedOperationException("Unimplemented method 'longValue'");
-   // }
+   @Override
+   public long longValue() {
+      return (long) this.numerator / this.denominator;
+   }
 
-   // @Override
-   // public float floatValue() {
-   //    // TODO Auto-generated method stub
-   //    throw new UnsupportedOperationException("Unimplemented method 'floatValue'");
-   // }
+   @Override
+   public float floatValue() {
+      return (float) this.numerator / this.denominator;
+   }
 
-   // @Override
-   // public double doubleValue() {
-   //    // TODO Auto-generated method stub
-   //    throw new UnsupportedOperationException("Unimplemented method 'doubleValue'");
-   // }
+   @Override
+   public double doubleValue() {
+      return (double) this.numerator / this.denominator;
+   }
 }
