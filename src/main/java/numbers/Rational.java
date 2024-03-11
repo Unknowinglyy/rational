@@ -2,6 +2,8 @@ package numbers;
 
 public class Rational extends Number implements Comparable<Number>{
 //TODO: do all the integer overflow checking for the functions that need this check. Function requirements are here: https://reimagined-train-wl296om.pages.github.io/client_complete_specification.html
+
+//Notes about integer overflow when it comes to divison: https://stackoverflow.com/questions/30394086/integer-division-overflows
     private int numerator;
     private int denominator;
 
