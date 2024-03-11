@@ -1,10 +1,9 @@
 package numbers;
 
 public class Rational extends Number implements Comparable<Number>{
-
+//TODO: do all the integer overflow checking for the functions that need this check. Function requirements are here: https://reimagined-train-wl296om.pages.github.io/client_complete_specification.html
     private int numerator;
     private int denominator;
-   //greatest common divisor
 
    public int numerator() {
       return numerator;
@@ -13,7 +12,7 @@ public class Rational extends Number implements Comparable<Number>{
    public int denominator() {
       return denominator;
    }
-
+   //greatest common divisor
     private int gcd(int a, int b) {
       while (b != 0) {
           int temp = b;
