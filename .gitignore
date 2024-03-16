@@ -1,6 +1,19 @@
 #ignore target file
 target/
-# Compiled class file
+
+#ignore html files
+*.html
+
+#ignore csv files
+*.csv
+
+#ignore execs
+*.exec
+
+#ignore lst
+*.lst
+
+# Compiled class files
 *.class
 
 # Log file
