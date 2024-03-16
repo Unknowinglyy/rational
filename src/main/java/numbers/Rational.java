@@ -33,6 +33,10 @@ public class Rational extends Number implements Comparable<Number>{
        if(a == Integer.MIN_VALUE && b == -1){
          throw new IllegalArgumentException("Overflow will occur");
        }
+       //need to figure out creating rationals with MIN and negatives and MIN and positives
+
+
+
        //if both negative, you can simplify by making both positive
        if (a < 0 && b < 0) {
          a = -1 * a;
@@ -80,6 +84,7 @@ public class Rational extends Number implements Comparable<Number>{
       if(this.numerator == -1 && this.denominator == Integer.MIN_VALUE){
          throw new IllegalArgumentException("Overflow will occur");
       }
+      //might need a test for the reverse also? But it might not be possible to even create a Rational object in the reverse case.
 
       if(this.numerator != 0){
          Rational newRational = new Rational(this.denominator, this.numerator);
@@ -195,7 +200,6 @@ public class Rational extends Number implements Comparable<Number>{
    public Rational dividedBy(Rational r){
       if(r.numerator != 0){
          Rational newFraction = new Rational(r.denominator, r.numerator);
-         //should throw an exception from the times function if overflowed? need some tests 
          Rational newRational = this.times(newFraction);
          return newRational;
       }

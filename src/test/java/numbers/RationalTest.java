@@ -137,10 +137,13 @@ public class RationalTest
         assertThat("-10 / -2 = 5 / 1", value16.denominator(), is(1));
 
 
-        //testing overflow condition
+        //testing overflow conditions
         IllegalArgumentException except2 = assertThrows(IllegalArgumentException.class, () -> {
             new Rational(Integer.MIN_VALUE, -1);
         });
+
+        //test for negative number as numerator and MIN as demoninator
+
         //TODO: test for different input values like strings, bools, etc.
     }
 
@@ -172,6 +175,10 @@ public class RationalTest
         assertThat("the numerator should be 2", value3.numerator(),is(2));
         assertThat("the denominator should be 3", value3.denominator(), is(3));
 
+        //testing overflow
+        Rational value4 = new Rational(Integer.MIN_VALUE, 1);
+        assertThrows(IllegalArgumentException.class, () -> value4.opposite());
+
         //TODO: test for different input values like strings, bools, etc.
     }
 
@@ -183,6 +190,19 @@ public class RationalTest
 
         Rational value2 = new Rational(0);
         assertThrows(IllegalArgumentException.class, () -> value2.reciprocal());
+
+        Rational value3 = new Rational(-1, Integer.MIN_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value3.reciprocal());
+
+        Rational value4 = new Rational(-1, 7);
+        Rational reciprocal2 = value4.reciprocal();
+        assertThat("the numerator should be -7", reciprocal2.numerator(), is(-7));
+        assertThat("the denominator should be 1", reciprocal2.denominator(), is(1));
+
+        Rational value5 = new Rational(2, Integer.MIN_VALUE);
+        Rational reciprocal3 = value5.reciprocal();
+        assertThat("the numerator should be MIN", reciprocal3.numerator(), is(Integer.MIN_VALUE/2));
+        assertThat("the denominator should be 2", reciprocal3.denominator(), is(1));
     }
 
     public void testTimes(){
@@ -206,6 +226,15 @@ public class RationalTest
         //negatives end up in right place
         assertThat("the numerator should be", result3.numerator(), is(-1));
         assertThat("the denominator should be", result3.denominator(), is(4));
+
+        //testing overflow
+        Rational value7 = new Rational(Integer.MAX_VALUE, 1);
+        Rational value8 = new Rational(Integer.MAX_VALUE, 1);
+        assertThrows(IllegalArgumentException.class, () -> value7.times(value8));
+
+        Rational value9 = new Rational(1, Integer.MAX_VALUE);
+        Rational value10 = new Rational(1, Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value9.times(value10));
     }
     
     public void testPlus(){
@@ -229,6 +258,17 @@ public class RationalTest
 
         assertThat("the numerator should be", result3.numerator(), is(13));
         assertThat("the denominator should be", result3.denominator(), is(6));
+
+        //testing overflow
+        Rational value7 = new Rational(Integer.MAX_VALUE, 1);
+        Rational value8 = new Rational(1, Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value7.plus(value8));
+        assertThrows(IllegalArgumentException.class, () -> value8.plus(value7));
+        assertThrows(IllegalArgumentException.class, () -> value8.plus(value8));
+        //(this.numerator * r.denominator) + (r.numerator * this.denominator)
+
+
+
     }
 
     public void testMinus(){
@@ -259,6 +299,18 @@ public class RationalTest
 
         assertThat("the numerator should be", result4.numerator(), is(-8));
         assertThat("the denominator should be", result4.denominator(), is(9));
+
+        //testing overflow
+        /*
+        this.numerator * r.denominator;
+        r.numerator * this.denominator;
+        this.denominator * r.denominator;
+         */
+        Rational value9 = new Rational(Integer.MAX_VALUE);
+        Rational value10 = new Rational(1, Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value9.minus(value10));
+        assertThrows(IllegalArgumentException.class, () -> value10.minus(value9));
+        assertThrows(IllegalArgumentException.class, () -> value10.minus(value10));
     }
 
     public void testdividedBy(){
@@ -280,6 +332,10 @@ public class RationalTest
 
         assertThat("the numerator should be", result3.numerator(), is(2));
         assertThat("the denominator should be", result3.denominator(), is(1));
+
+        Rational value7 = new Rational(Integer.MIN_VALUE);
+        Rational value8 = new Rational(-1);
+        assertThrows(IllegalArgumentException.class, () -> value7.dividedBy(value8));
     }
 
     public void testRaisedToThePowerOf(){
@@ -307,6 +363,32 @@ public class RationalTest
         Rational result4 = value4.raisedToThePowerOf(5);
         assertThat("the numerator should be", result4.numerator(), is(0));
         assertThat("the denominator should be", result4.denominator(), is(1));
+
+        Rational value5 = new Rational(Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value5.raisedToThePowerOf(7));
+
+        Rational value6 = new Rational(1, Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value6.raisedToThePowerOf(7));
+
+        Rational value7 = new Rational(-Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value7.raisedToThePowerOf(-7));
+
+        Rational value8 = new Rational(-1, Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value8.raisedToThePowerOf(-7));
+
+        Rational value9 = new Rational(Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value9.raisedToThePowerOf(-7));
+
+        Rational value10 = new Rational(1, Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value10.raisedToThePowerOf(-7));
+
+        Rational value11 = new Rational(-Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value11.raisedToThePowerOf(7));
+
+        Rational value12 = new Rational(-1, Integer.MAX_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value12.raisedToThePowerOf(7));
+
+
     }
     
     public void testEquals(){
