@@ -96,6 +96,17 @@ public class Rational extends Number implements Comparable<Number>{
    //  }
 
    public Rational times(Rational r){
+      long result1 = this.numerator * r.numerator;
+      long result2 = this.denominator * r.denominator;
+
+      //testing if multiplication will overflow
+      if(this.numerator != result1 / r.numerator){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+      if(this.denominator != result2 / r.denominator){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
       int newNumerator = this.numerator * r.numerator;
       int newDenominator = this.denominator * r.denominator;
       //takes care of negatives and simplifying the fraction if needed
@@ -105,12 +116,12 @@ public class Rational extends Number implements Comparable<Number>{
 
    public Rational plus(Rational r){
       //testing overflow
-      long result2 = r.numerator * this.denominator;
       long result1 = this.numerator * r.denominator;
+      long result2 = r.numerator * this.denominator;
       long result3 = this.denominator * r.denominator;
       int result4 = (this.numerator * r.denominator) + (r.numerator * this.denominator);
 
-      //comparing the actual result with the reported result
+      //checking if the multiplication will overflow
       if(this.numerator != result1 / r.denominator){
          throw new IllegalArgumentException("Overflow will occur");
       }
@@ -123,6 +134,7 @@ public class Rational extends Number implements Comparable<Number>{
          throw new IllegalArgumentException("Overflow will occur");
       }
 
+      //checking if the adding will overflow
       if((this.numerator * r.denominator) > 0 && (r.numerator * this.denominator) > 0 && result4 < 0){
          throw new IllegalArgumentException("Overflow will occur");
       }
@@ -139,8 +151,41 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public Rational minus(Rational r){
+      //testing overflow
+      long result1 = this.numerator * r.denominator;
+      long result2 = r.numerator * this.denominator;
+      long result3 = this.denominator * r.denominator;
+      int result4 = (this.numerator * r.denominator) + -(r.numerator * this.denominator);
 
-      int newNumerator = (this.numerator * r.denominator) - (r.numerator * this.denominator);
+      //checking if the multiplication will overflow
+      if(this.numerator != result1 / r.denominator){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+      if(r.numerator != result2 / this.denominator){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+      if(this.denominator != result3 / r.denominator){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+      //if the min value is the second operand, then there is no number as the first operand that will not cause overflow other than min value 
+      if((r.numerator * this.denominator) == Integer.MIN_VALUE && (this.numerator * r.denominator) != Integer.MIN_VALUE ){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+      //checking if the subtracting will overflow
+      if((this.numerator * r.denominator) > 0 && -(r.numerator * this.denominator) > 0 && result4 < 0){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+      if((this.numerator * r.denominator) < 0 && -(r.numerator * this.denominator) < 0 && result4 > 0){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+
+      int newNumerator = (this.numerator * r.denominator) + -(r.numerator * this.denominator);
       int newDenominator = this.denominator * r.denominator;
 
       Rational newRational = new Rational(newNumerator, newDenominator);
@@ -150,6 +195,7 @@ public class Rational extends Number implements Comparable<Number>{
    public Rational dividedBy(Rational r){
       if(r.numerator != 0){
          Rational newFraction = new Rational(r.denominator, r.numerator);
+         //should throw an exception from the times function if overflowed? need some tests 
          Rational newRational = this.times(newFraction);
          return newRational;
       }
@@ -167,15 +213,38 @@ public class Rational extends Number implements Comparable<Number>{
             //if negative exponent, make it positive and flip the fraction
             int newN = -n;
             
+            double result1 = Math.pow(this.denominator, newN);
+            double result2 = Math.pow(this.numerator, newN);
+
             int newNumerator = (int) Math.pow(this.denominator, newN);
             int newDenominator = (int) Math.pow(this.numerator, newN);
+
+            //testing for overflow
+            if(result1 != newNumerator){
+               throw new IllegalArgumentException("Overflow will occur");
+            }
+            if(result2 != newDenominator){
+               throw new IllegalArgumentException("Overflow will occur");
+            }
 
             Rational newRational = new Rational(newNumerator, newDenominator);
             return newRational;
          }
          //if non-negative exponent, do normal operations
+         double result1 = Math.pow(this.numerator,n);
+         double result2 = Math.pow(this.denominator,n);
+
          int newNumerator = (int) Math.pow(this.numerator, n);
          int newDenominator = (int) Math.pow(this.denominator, n);
+
+         //testing for overflow
+         if(result1 != newNumerator){
+            throw new IllegalArgumentException("Overflow will occur");
+         }
+         if(result2 != newDenominator){
+            throw new IllegalArgumentException("Overflow will occur");
+         }
+
          Rational newRational = new Rational(newNumerator, newDenominator);
          return newRational;
       }
