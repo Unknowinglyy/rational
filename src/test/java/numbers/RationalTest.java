@@ -136,6 +136,13 @@ public class RationalTest
         assertThat("-10 / -2 = 5 / 1", value16.numerator(), is(5));
         assertThat("-10 / -2 = 5 / 1", value16.denominator(), is(1));
 
+
+        //testing overflow condition
+        IllegalArgumentException except2 = assertThrows(IllegalArgumentException.class, () -> {
+            new Rational(Integer.MIN_VALUE, -1);
+        });
+
+
         //TODO: test for different input values like strings, bools, etc.
     }
 

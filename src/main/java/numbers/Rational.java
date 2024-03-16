@@ -28,6 +28,11 @@ public class Rational extends Number implements Comparable<Number>{
        if (b == 0) {
            throw new IllegalArgumentException("Denominator cannot be zero");
        }
+       //integer overflow: abs(INTEGER MIN) = INTEGER MAX + 1 
+       //in other words, the absolute value of INTEGER MIN would result in overflow
+       if(a == Integer.MIN_VALUE && b == -1){
+         throw new IllegalArgumentException("Overflow has occured");
+       }
        //if both negative, you can simplify by making both positive
        if (a < 0 && b < 0) {
          a = -1 * a;
