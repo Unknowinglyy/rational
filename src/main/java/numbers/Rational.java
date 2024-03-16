@@ -34,16 +34,57 @@ public class Rational extends Number implements Comparable<Number>{
          throw new IllegalArgumentException("Overflow will occur");
        }
        //need to figure out creating rationals with MIN and negatives and MIN and positives
+       if(a == -1 && b == Integer.MIN_VALUE){
+         throw new IllegalArgumentException("Overflow will occur");
+       }
 
+       // MIN / MIN
+       if(a == Integer.MIN_VALUE && b == Integer.MIN_VALUE){
+         a = 1;
+         b = 1;
+       }
+       // 1 / MIN (only rational that will have a negative in the denominator)
+       if(a == 1 && b == Integer.MIN_VALUE){
+         this.numerator = 1;
+         this.denominator = Integer.MIN_VALUE;
+         return;
+       }
+       // POSITIVE / MIN
+       if(a > 0 && b == Integer.MIN_VALUE){
+         int gcd = gcd(Math.abs(a), Math.abs(b));
+         this.numerator = -a / gcd;
+         this.denominator = b / gcd;
+         return;
+       }
+       // NEGATIVE / MIN
+       if(a < 0 && b == Integer.MIN_VALUE){
+         throw new IllegalArgumentException("Overflow will occur");
+       }
+
+       // MIN / NEGATIVE (might need the MIN to be divided somehow, if the gcd is 1, then we cant decrease the min and overflow happens)
+       if(a == Integer.MIN_VALUE && b < 0){
+         b = Math.abs(b);
+         a = Math.abs(Integer.MIN_VALUE / b);
+         b = 1;
+       }
+
+       //MIN / POSITIVE 
+       if(a == Integer.MIN_VALUE && b > 0){
+         a = (Integer.MIN_VALUE / b);
+         b = 1;
+       }
 
 
        //if both negative, you can simplify by making both positive
        if (a < 0 && b < 0) {
-         a = -1 * a;
-         b = -1 * b;
+         //would cause incorrect behavior/overflow otherwise
+         if(a != Integer.MIN_VALUE){
+            a = -1 * a;
+         }
+         if(b != Integer.MIN_VALUE){
+            b = -1 * b;
+         }
       }
-       
- 
        // Find the greatest common divisor
        int gcd = gcd(Math.abs(a), Math.abs(b));
  
@@ -80,13 +121,8 @@ public class Rational extends Number implements Comparable<Number>{
     }
 
     public Rational reciprocal(){
-      //testing overflow
-      if(this.numerator == -1 && this.denominator == Integer.MIN_VALUE){
-         throw new IllegalArgumentException("Overflow will occur");
-      }
-      //might need a test for the reverse also? But it might not be possible to even create a Rational object in the reverse case.
-
       if(this.numerator != 0){
+         //overflow testing happens in constructor
          Rational newRational = new Rational(this.denominator, this.numerator);
          return newRational;
       }

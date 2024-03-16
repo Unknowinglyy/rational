@@ -142,6 +142,38 @@ public class RationalTest
             new Rational(Integer.MIN_VALUE, -1);
         });
 
+        IllegalArgumentException except3 = assertThrows(IllegalArgumentException.class, () -> {
+            new Rational(-1, Integer.MIN_VALUE);
+        });
+
+        Rational value17 = new Rational(Integer.MIN_VALUE,Integer.MIN_VALUE);
+        assertThat("MIN / MIN = 1 / 1", value17.numerator(), is(1));
+        assertThat("MIN / MIN = 1 / 1", value17.denominator(), is(1));
+
+        Rational value18 = new Rational(Integer.MAX_VALUE,Integer.MAX_VALUE);
+        assertThat("MAX / MAX = 1 / 1", value18.numerator(), is(1));
+        assertThat("MAX / MAX = 1 / 1", value18.denominator(), is(1));
+
+        Rational value19 = new Rational(Integer.MIN_VALUE,-7);
+        assertThat("MIN / -7 = (MIN/7) / 1", value19.numerator(), is(-(Integer.MIN_VALUE/7)));
+        assertThat("MIN / -7 = (MIN/7) / 1", value19.denominator(), is(1));
+
+        Rational value20 = new Rational(Integer.MIN_VALUE,7);
+        assertThat("MIN / 7 = MIN / 7", value20.numerator(), is(Integer.MIN_VALUE));
+        assertThat("MIN / 7 = MIN / 7", value20.denominator(), is(7));
+
+        Rational value21 = new Rational(2, Integer.MIN_VALUE);
+        assertThat("2 / MIN = 1 / (MIN/2)", value21.numerator(), is(-1));
+        assertThat("2 / MIN = 1 / (MIN/2)", value21.denominator(), is(Integer.MIN_VALUE/2));
+
+        Rational value22 = new Rational(1, Integer.MIN_VALUE);
+        assertThat("1 / MIN = 1 / MIN", value22.numerator(), is(1));
+        assertThat("1 / MIN = 1 / MIN", value22.denominator(), is(Integer.MIN_VALUE));
+
+        Rational value23 = new Rational(Integer.MIN_VALUE,1);
+        assertThat("MIN / 1 = MIN / 1", value23.numerator(), is(Integer.MIN_VALUE));
+        assertThat("MIN / 1 = MIN / 1", value23.denominator(), is(1));
+
         //test for negative number as numerator and MIN as demoninator
 
         //TODO: test for different input values like strings, bools, etc.
@@ -190,9 +222,9 @@ public class RationalTest
 
         Rational value2 = new Rational(0);
         assertThrows(IllegalArgumentException.class, () -> value2.reciprocal());
-
-        Rational value3 = new Rational(-1, Integer.MIN_VALUE);
-        assertThrows(IllegalArgumentException.class, () -> value3.reciprocal());
+        //this construction is possible, but it makes the fraciton -1 / min 
+        // Rational value3 = new Rational(1, Integer.MIN_VALUE);
+        // assertThrows(IllegalArgumentException.class, () -> value3.reciprocal());
 
         Rational value4 = new Rational(-1, 7);
         Rational reciprocal2 = value4.reciprocal();
@@ -201,8 +233,8 @@ public class RationalTest
 
         Rational value5 = new Rational(2, Integer.MIN_VALUE);
         Rational reciprocal3 = value5.reciprocal();
-        assertThat("the numerator should be MIN", reciprocal3.numerator(), is(Integer.MIN_VALUE/2));
-        assertThat("the denominator should be 2", reciprocal3.denominator(), is(1));
+        assertThat("the numerator should be MIN/2", reciprocal3.numerator(), is(Integer.MIN_VALUE/2));
+        assertThat("the denominator should be 1", reciprocal3.denominator(), is(1));
     }
 
     public void testTimes(){
