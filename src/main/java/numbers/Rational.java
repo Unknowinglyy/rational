@@ -31,7 +31,7 @@ public class Rational extends Number implements Comparable<Number>{
        //integer overflow: abs(INTEGER MIN) = INTEGER MAX + 1 
        //in other words, the absolute value of INTEGER MIN would result in overflow
        if(a == Integer.MIN_VALUE && b == -1){
-         throw new IllegalArgumentException("Overflow has occured");
+         throw new IllegalArgumentException("Overflow will occur");
        }
        //if both negative, you can simplify by making both positive
        if (a < 0 && b < 0) {
@@ -66,11 +66,21 @@ public class Rational extends Number implements Comparable<Number>{
     }
     
     public Rational opposite(){
+      //testing overflow
+      if(this.numerator == Integer.MIN_VALUE){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
       Rational newRational = new Rational(this.numerator * -1, this.denominator);
       return newRational;
     }
 
     public Rational reciprocal(){
+      //testing overflow
+      if(this.numerator == -1 && this.denominator == Integer.MIN_VALUE){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
       if(this.numerator != 0){
          Rational newRational = new Rational(this.denominator, this.numerator);
          return newRational;
@@ -94,6 +104,33 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public Rational plus(Rational r){
+      //testing overflow
+      long result2 = r.numerator * this.denominator;
+      long result1 = this.numerator * r.denominator;
+      long result3 = this.denominator * r.denominator;
+      int result4 = (this.numerator * r.denominator) + (r.numerator * this.denominator);
+
+      //comparing the actual result with the reported result
+      if(this.numerator != result1 / r.denominator){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+      if(r.numerator != result2 / this.denominator){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+      if(this.denominator != result3 / r.denominator){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+      if((this.numerator * r.denominator) > 0 && (r.numerator * this.denominator) > 0 && result4 < 0){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+      if((this.numerator * r.denominator) < 0 && (r.numerator * this.denominator) < 0 && result4 > 0){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+      
       int newNumerator = (this.numerator * r.denominator) + (r.numerator * this.denominator);
       int newDenominator = this.denominator * r.denominator;
 
@@ -102,6 +139,7 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public Rational minus(Rational r){
+
       int newNumerator = (this.numerator * r.denominator) - (r.numerator * this.denominator);
       int newDenominator = this.denominator * r.denominator;
 
