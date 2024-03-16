@@ -5,6 +5,7 @@ public class Rational extends Number implements Comparable<Number>{
 
 //Notes about integer overflow when it comes to divison: https://stackoverflow.com/questions/30394086/integer-division-overflows
 //test push 
+//test push 2
     private int numerator;
     private int denominator;
 
