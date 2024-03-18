@@ -345,7 +345,6 @@ public class RationalTest
         
         assertThat("the numerator should be", result.numerator(), is(-21));
         assertThat("the denominator should be", result.denominator(), is(2));
-        System.out.println("starting weird test");
         Rational value3 = new Rational(1,3);
         Rational value4 = new Rational();
         Rational result2 = value3.minus(value4);
@@ -368,16 +367,38 @@ public class RationalTest
         assertThat("the denominator should be", result4.denominator(), is(9));
 
         //testing overflow
-        /*
-        this.numerator * r.denominator;
-        r.numerator * this.denominator;
-        this.denominator * r.denominator;
-         */
         Rational value9 = new Rational(Integer.MAX_VALUE);
         Rational value10 = new Rational(1, Integer.MAX_VALUE);
         assertThrows(IllegalArgumentException.class, () -> value9.minus(value10));
         assertThrows(IllegalArgumentException.class, () -> value10.minus(value9));
-        assertThrows(IllegalArgumentException.class, () -> value10.minus(value10));
+        Rational test = value10.minus(value10);
+        assertThat("the numerator should be", test.numerator(), is(0));
+        assertThat("the numerator should be", test.denominator(), is(1));
+        Rational test2 = value9.minus(value9);
+        assertThat("the numerator should be", test2.numerator(), is(0));
+        assertThat("the numerator should be", test2.denominator(), is(1));
+
+        Rational value11 = new Rational((Integer.MIN_VALUE + 5), 1);
+        Rational value12 = new Rational(5,1);
+        Rational result5 = value11.minus(value12);
+        assertThat("the numerator should be ", result5.numerator(), is(Integer.MIN_VALUE));
+        assertThat("the denominator should be", result5.denominator(), is(1));
+
+        Rational value13 = new Rational(5);
+        Rational result6 = value13.minus(value13);
+        assertThat("the numerator should be ", result6.numerator(), is(0));
+        assertThat("the denominator should be", result6.denominator(), is(1));
+
+        Rational value14 = new Rational(Integer.MIN_VALUE);
+        Rational result7 = value14.minus(value14);
+        assertThat("the numerator should be ", result7.numerator(), is(0));
+        assertThat("the denominator should be", result7.denominator(), is(1));
+
+        Rational value15 = new Rational();
+        Rational value16 = new Rational();
+        Rational result8 = value15.minus(value16);
+        assertThat("the numerator should be", result8.numerator(), is(0));
+        assertThat("the numerator should be", result8.denominator(), is(1));
     }
 
     public void testdividedBy(){

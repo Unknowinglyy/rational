@@ -204,10 +204,13 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public Rational minus(Rational r){
-      if(r.numerator != 0){
-      Rational minusOne = new Rational(-1);
-      Rational newR = minusOne.times(r);
-      return this.plus(newR);
+      if(this.numerator == r.numerator && this.denominator == r.denominator){
+         return new Rational();
+      }
+      else if(r.numerator != 0){
+         Rational minusOne = new Rational(-1);
+         Rational newR = minusOne.times(r);
+         return this.plus(newR);
       }
       else{
          return this;
