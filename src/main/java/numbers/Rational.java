@@ -33,7 +33,6 @@ public class Rational extends Number implements Comparable<Number>{
        if(a == Integer.MIN_VALUE && b == -1){
          throw new IllegalArgumentException("Overflow will occur");
        }
-       //need to figure out creating rationals with MIN and negatives and MIN and positives
        if(a == -1 && b == Integer.MIN_VALUE){
          throw new IllegalArgumentException("Overflow will occur");
        }
@@ -43,47 +42,60 @@ public class Rational extends Number implements Comparable<Number>{
          a = 1;
          b = 1;
        }
-       // 1 / MIN (only rational that will have a negative in the denominator)
+       // 1 / MIN (only rational that will always have a negative in the denominator)
        if(a == 1 && b == Integer.MIN_VALUE){
          this.numerator = 1;
          this.denominator = Integer.MIN_VALUE;
          return;
        }
-       // POSITIVE / MIN
+       // POSITIVE / MIN (could have a negative in the denominator if no common divisor exists between the numerator and MIN)
+       //note: Math.abs function does nothing to MIN 
        if(a > 0 && b == Integer.MIN_VALUE){
-         int gcd = gcd(Math.abs(a), Math.abs(b));
-         this.numerator = -a / gcd;
-         this.denominator = b / gcd;
+         int gcd = gcd(a, b);
+         if(gcd != 1){
+            this.numerator = -a / gcd;
+            this.denominator = -(b / gcd);
+         }
+         else{
+            this.numerator = a;
+            this.denominator = b;
+         }
          return;
        }
-       // NEGATIVE / MIN
+       // NEGATIVE / MIN (wont overflow if MIN can be "reduced", otherwise overflow will occur)
        if(a < 0 && b == Integer.MIN_VALUE){
-         throw new IllegalArgumentException("Overflow will occur");
+         int gcd = gcd(Math.abs(a), b);
+         if (gcd == 1){
+            throw new IllegalArgumentException("Overflow will occur");
+         }
+         else{
+            this.numerator = -(a / gcd);
+            this.denominator = -(b / gcd);
+         }
+         return;
        }
 
        // MIN / NEGATIVE (might need the MIN to be divided somehow, if the gcd is 1, then we cant decrease the min and overflow happens)
        if(a == Integer.MIN_VALUE && b < 0){
-         b = Math.abs(b);
-         a = Math.abs(Integer.MIN_VALUE / b);
-         b = 1;
+         int gcd = gcd(a, Math.abs(b));
+         if(gcd == 1){
+            throw new IllegalArgumentException("Overflow will occur");
+         }
+         else{
+            this.numerator = -(a / gcd);
+            this.denominator = -(b / gcd);
+         }
+         return;
        }
 
-       //MIN / POSITIVE 
-       if(a == Integer.MIN_VALUE && b > 0){
-         a = (Integer.MIN_VALUE / b);
-         b = 1;
-       }
+       //MIN / POSITIVE
+       //logic below handles this
 
 
        //if both negative, you can simplify by making both positive
        if (a < 0 && b < 0) {
-         //would cause incorrect behavior/overflow otherwise
-         if(a != Integer.MIN_VALUE){
-            a = -1 * a;
-         }
-         if(b != Integer.MIN_VALUE){
-            b = -1 * b;
-         }
+         a = -1 * a;
+         b = -1 * b;
       }
        // Find the greatest common divisor
        int gcd = gcd(Math.abs(a), Math.abs(b));
@@ -176,11 +188,11 @@ public class Rational extends Number implements Comparable<Number>{
       }
 
       //checking if the adding will overflow
-      if((this.numerator * r.denominator) > 0 && (r.numerator * this.denominator) > 0 && result4 < 0){
+      if((this.numerator * r.denominator) > 0 && (r.numerator * this.denominator) > 0 && result4 <= 0){
          throw new IllegalArgumentException("Overflow will occur");
       }
 
-      if((this.numerator * r.denominator) < 0 && (r.numerator * this.denominator) < 0 && result4 > 0){
+      if((this.numerator * r.denominator) < 0 && (r.numerator * this.denominator) < 0 && result4 >= 0){
          throw new IllegalArgumentException("Overflow will occur");
       }
       
