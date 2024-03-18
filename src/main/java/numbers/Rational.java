@@ -204,56 +204,20 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public Rational minus(Rational r){
-      //testing overflow
-      long result1 = this.numerator * r.denominator;
-      long result2 = r.numerator * this.denominator;
-      long result3 = this.denominator * r.denominator;
-      int result4 = (this.numerator * r.denominator) + -(r.numerator * this.denominator);
-
-      //checking if the multiplication will overflow
-      if(this.numerator != result1 / r.denominator){
-         throw new IllegalArgumentException("Overflow will occur");
+      if(r.numerator != 0){
+      Rational minusOne = new Rational(-1);
+      Rational newR = minusOne.times(r);
+      return this.plus(newR);
       }
-
-      if(r.numerator != result2 / this.denominator){
-         throw new IllegalArgumentException("Overflow will occur");
+      else{
+         return this;
       }
-
-      if(this.denominator != result3 / r.denominator){
-         throw new IllegalArgumentException("Overflow will occur");
-      }
-
-      //if the min value is the second operand, then there is no number as the first operand that will not cause overflow other than min value 
-      if((r.numerator * this.denominator) == Integer.MIN_VALUE && (this.numerator * r.denominator) != Integer.MIN_VALUE ){
-         throw new IllegalArgumentException("Overflow will occur");
-      }
-
-      //checking if the subtracting will overflow
-      if((this.numerator * r.denominator) > 0 && -(r.numerator * this.denominator) > 0 && result4 < 0){
-         throw new IllegalArgumentException("Overflow will occur");
-      }
-
-      if((this.numerator * r.denominator) < 0 && -(r.numerator * this.denominator) < 0 && result4 > 0){
-         throw new IllegalArgumentException("Overflow will occur");
-      }
-
-
-      int newNumerator = (this.numerator * r.denominator) + -(r.numerator * this.denominator);
-      int newDenominator = this.denominator * r.denominator;
-
-      Rational newRational = new Rational(newNumerator, newDenominator);
-      return newRational;
    }
 
    public Rational dividedBy(Rational r){
-      if(r.numerator != 0){
-         Rational newFraction = new Rational(r.denominator, r.numerator);
-         Rational newRational = this.times(newFraction);
-         return newRational;
-      }
-      else{
-         throw new IllegalArgumentException("Can not divide by zero");
-      }
+      Rational newFraction = r.reciprocal();
+      Rational newRational = this.times(newFraction);
+      return newRational;
    }
 
    public Rational raisedToThePowerOf(int n){
