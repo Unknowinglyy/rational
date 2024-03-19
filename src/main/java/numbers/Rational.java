@@ -321,12 +321,21 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public boolean greaterThan(Number n){
-      double dRational = (double) this.numerator / this.denominator;
-      if(dRational > n.doubleValue()){
-         return true;
+      if(n instanceof Float){
+         if(this.floatValue() > n.floatValue()){
+            return true;
+         }
+         else{
+            return false;
+         }
       }
       else{
-         return false;
+         if(this.doubleValue() > n.doubleValue()){
+            return true;
+         }
+         else{
+            return false;
+         }
       }
    }
 
@@ -337,12 +346,21 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public boolean lessThan(Number n){
-      double dRational = (double) this.numerator / this.denominator;
-      if(dRational < n.doubleValue()){
-         return true;
+      if(n instanceof Float){
+         if(this.floatValue() < n.floatValue()){
+            return true;
+         }
+         else{
+            return false;
+         }
       }
       else{
-         return false;
+         if(this.doubleValue() < n.doubleValue()){
+            return true;
+         }
+         else{
+            return false;
+         }
       }
    }
 

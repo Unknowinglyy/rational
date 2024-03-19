@@ -836,6 +836,18 @@ public class RationalTest
         Rational value5 = new Rational(1,2);
         int result5 = value5.compareTo(null);
         assertThat("1 / 2 has no relation to null", result5, is(-2));
+
+        Rational value6 = new Rational(Integer.MAX_VALUE);
+        int result6 = value6.compareTo(Integer.MAX_VALUE);
+        assertThat("MAX is equal to MAXf", result6, is(0));
+        
+        Rational value7 = new Rational(Integer.MAX_VALUE);
+        int result7 = value7.compareTo((double) Integer.MAX_VALUE);
+        assertThat("MAX is equal to MAXd", result7, is(0));
+
+        Rational value8 = new Rational(Integer.MAX_VALUE);
+        int result8 = value8.compareTo((float) Integer.MAX_VALUE);
+        assertThat("MAX is equal to MAXd", result8, is(0));
     }
 
     public void testIntValue(){
@@ -872,6 +884,10 @@ public class RationalTest
         Rational value4 = new Rational();
         long result4 = value4.longValue();
         assertThat("0 / 1 in long form is 0l", result4, is(0l));
+
+        Rational value5 = new Rational(1,7);
+        long result5 = value5.longValue();
+        assertThat("1 / 7 in long form is 0.14285714285l", result5, is((long) 0.14285714285));
     }
 
     public void testFloatValue(){
