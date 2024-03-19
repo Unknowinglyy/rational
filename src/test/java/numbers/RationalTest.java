@@ -137,9 +137,7 @@ public class RationalTest
 
         assertThrows(IllegalArgumentException.class, () -> new Rational(-1, Integer.MIN_VALUE));
 
-        Rational value17 = new Rational(Integer.MIN_VALUE,Integer.MIN_VALUE);
-        assertThat("MIN / MIN = 1 / 1", value17.numerator(), is(1));
-        assertThat("MIN / MIN = 1 / 1", value17.denominator(), is(1));
+        assertThrows(IllegalArgumentException.class, () -> new Rational(Integer.MIN_VALUE,Integer.MIN_VALUE));
 
         Rational value18 = new Rational(Integer.MAX_VALUE,Integer.MAX_VALUE);
         assertThat("MAX / MAX = 1 / 1", value18.numerator(), is(1));
@@ -159,9 +157,7 @@ public class RationalTest
         assertThat("2 / MIN = -1 / (MIN/2)", value21.numerator(), is(-1));
         assertThat("2 / MIN = -1 / (MIN/2)", value21.denominator(), is(-(Integer.MIN_VALUE/2)));
 
-        Rational value22 = new Rational(1, Integer.MIN_VALUE);
-        assertThat("1 / MIN = 1 / MIN", value22.numerator(), is(1));
-        assertThat("1 / MIN = 1 / MIN", value22.denominator(), is(Integer.MIN_VALUE));
+        assertThrows(IllegalArgumentException.class, () -> new Rational(1, Integer.MIN_VALUE));
 
         Rational value23 = new Rational(Integer.MIN_VALUE,1);
         assertThat("MIN / 1 = MIN / 1", value23.numerator(), is(Integer.MIN_VALUE));
@@ -186,6 +182,14 @@ public class RationalTest
         Rational value27 = new Rational(Integer.MAX_VALUE, -2);
         assertThat("MAX / -2 = -MAX / 2", value27.numerator(), is(-(Integer.MAX_VALUE)));
         assertThat("MAX / -2 = -MAX / 2", value27.denominator(), is(2));
+
+        assertThrows(IllegalArgumentException.class, () -> new Rational(Integer.MAX_VALUE, Integer.MIN_VALUE));
+        assertThrows(IllegalArgumentException.class, () -> new Rational(0,0));
+
+        Rational value28 = new Rational(0,2);
+        assertThat("The numerator should be", value28.numerator(), is(0));
+        assertThat("The numerator should be", value28.denominator(), is(1));
+
     }
 
     public void testcopyConstructor(){
@@ -246,6 +250,11 @@ public class RationalTest
         Rational reciprocal3 = value5.reciprocal();
         assertThat("the numerator should be MIN/2", reciprocal3.numerator(), is(Integer.MIN_VALUE/2));
         assertThat("the denominator should be 1", reciprocal3.denominator(), is(1));
+
+        Rational value6 = new Rational(Integer.MAX_VALUE, Integer.MIN_VALUE + 2);
+        Rational reciprocal4 = value6.reciprocal();
+        assertThat("the numerator should be ", reciprocal4.numerator(), is(Integer.MIN_VALUE + 2));
+        assertThat("the denominator should be ", reciprocal4.denominator(), is(Integer.MAX_VALUE));
     }
 
     public void testTimes(){
@@ -278,6 +287,12 @@ public class RationalTest
         Rational value9 = new Rational(1, Integer.MAX_VALUE);
         Rational value10 = new Rational(1, Integer.MAX_VALUE);
         assertThrows(IllegalArgumentException.class, () -> value9.times(value10));
+
+        Rational value11 = new Rational(Integer.MAX_VALUE);
+        Rational value12 = new Rational(2);
+        assertThrows(IllegalArgumentException.class, () -> value11.times(value12));
+        Rational value13 = new Rational(Integer.MIN_VALUE);
+        assertThrows(IllegalArgumentException.class, () -> value13.times(value12));
     }
     
     public void testPlus(){
@@ -335,6 +350,25 @@ public class RationalTest
         assertThat("the numerator should be", result6.numerator(), is(0));
         assertThat("the denominator should be", result6.denominator(), is(1));
 
+        Rational value19 = new Rational(1, 5);
+        Rational value20 = new Rational(4,5);
+        Rational result7 = value19.plus(value20);
+        assertThat("the numerator should be", result7.numerator(), is(1));
+        assertThat("the denominator should be", result7.denominator(), is(1));
+
+        Rational value21 = new Rational(1, -5);
+        Rational value22 = new Rational(4, -5);
+        Rational result8 = value21.plus(value22);
+        assertThat("the numerator should be", result8.numerator(), is(-1));
+        assertThat("the denominator should be", result8.denominator(), is(1));
+
+        Rational value23 = new Rational(Integer.MAX_VALUE);
+        Rational value24 = new Rational(1);
+        assertThrows(IllegalArgumentException.class, () -> value23.plus(value24));
+
+        Rational ll = new Rational(1, (int) Math.pow(2, 20));
+        Rational rr = new Rational(1, ((int) Math.pow(2, 20)) + 1);
+        assertThrows(IllegalArgumentException.class, () -> ll.plus(rr));
 
     }
 
@@ -399,6 +433,7 @@ public class RationalTest
         Rational result8 = value15.minus(value16);
         assertThat("the numerator should be", result8.numerator(), is(0));
         assertThat("the numerator should be", result8.denominator(), is(1));
+
     }
 
     public void testdividedBy(){
@@ -424,6 +459,13 @@ public class RationalTest
         Rational value7 = new Rational(Integer.MIN_VALUE);
         Rational value8 = new Rational(-1);
         assertThrows(IllegalArgumentException.class, () -> value7.dividedBy(value8));
+
+        Rational value9 = new Rational(Integer.MAX_VALUE);
+        Rational result4 = value9.dividedBy(value9);
+        assertThat("the numerator should be", result4.numerator(), is(1));
+        assertThat("the denominator should be", result4.denominator(), is(1));
+
+        assertThrows(IllegalArgumentException.class, () -> value7.dividedBy(value7));
     }
 
     public void testRaisedToThePowerOf(){
@@ -476,6 +518,10 @@ public class RationalTest
         Rational value12 = new Rational(-1, Integer.MAX_VALUE);
         assertThrows(IllegalArgumentException.class, () -> value12.raisedToThePowerOf(7));
 
+        Rational value13 = new Rational(1);
+        Rational result5 = value13.raisedToThePowerOf(Integer.MAX_VALUE);
+        assertThat("the numerator should be", result5.numerator(), is(1));
+        assertThat("the denominator should be", result5.denominator(), is(1));
 
     }
     
@@ -515,6 +561,35 @@ public class RationalTest
         Rational value9 = new Rational();
         boolean result9 = value9.equals(null);
         assertThat("1 / 0 should not be equal to null", result9, is(false));
+
+        Rational value10 = new Rational(10, 10);
+        Rational value11 = new Rational(1);
+        boolean result10 = value10.equals(value11);
+        assertThat("10 / 10 should be equal to 1 / 1", result10, is(true));
+
+        Rational value12 = new Rational(5,2);
+        Rational value13 = new Rational(5,3);
+        boolean result11 = value12.equals(value13);
+        assertThat("5 / 2 should not be equal to 5 / 3", result11, is(false));
+
+        Rational value14 = new Rational(5,1);
+        boolean result12 = value14.equals(value14);
+        assertThat("5 / 1 should be equal to itself", result12, is(true));
+
+        Rational value15 = new Rational(1,3);
+        Rational value16 = new Rational(2,3);
+        boolean result13 = value15.equals(value16); 
+        assertThat("1 / 3 should not be equal to 2 / 3", result13, is(false));
+
+        Rational value17 = new Rational(5,3);
+        Rational value18 = new Rational(1,2);
+        boolean result14 = value17.equals(value18);
+        assertThat("5 / 3 should not be equal to 1 / 2", result14, is(false));
+
+        Rational value19 = new Rational(1, (Integer.MIN_VALUE+1));
+        Rational value20 = new Rational(-1, (Integer.MAX_VALUE));
+        boolean result15 = value19.equals(value20);
+        assertThat("1 / (MIN+1) should  be equal to -1 / MAX", result15, is(true));
     }
 
     public void testGreaterThanN(){
@@ -529,6 +604,10 @@ public class RationalTest
         Rational value3 = new Rational(6, 1);
         boolean result3 = value3.greaterThan(8);
         assertThat("6 / 1 should not be greater than 8", result3, is(false));
+
+        Rational value5 = new Rational(-5);
+        boolean result4 = value5.greaterThan(5);
+        assertThat("-5 / 1 should not be greater than 5", result4, is(false));
     }
 
     public void testGreaterThanR(){
@@ -546,6 +625,10 @@ public class RationalTest
         Rational value6 = new Rational(1,2);
         boolean result3 = value5.greaterThan(value6);
         assertThat("-10 / 1 should not be greater than 1 / 2", result3, is(false));
+
+        Rational value7 = new Rational();
+        boolean result4 = value7.greaterThan(value4);
+        assertThat("0 / 1 should not be greater than itself", result4, is(false));
     }
 
     public void testLessThanN(){
@@ -560,6 +643,10 @@ public class RationalTest
         Rational value3 = new Rational(1,8);
         boolean result3 = value3.lessThan(0.125d);
         assertThat("1 / 8 should not be less than 0.125d", result3, is(false));
+
+        Rational value4 = new Rational(2,5);
+        boolean result4 = value4.lessThan(0.25d);
+        assertThat("2 / 5 should not be less than 0.25d", result4, is(false));
     }
 
     public void testLessThanR(){
@@ -577,6 +664,20 @@ public class RationalTest
         Rational value6 = new Rational(-3 , 2);
         boolean result3 = value5.lessThan(value6);
         assertThat("-5 / 2 should be less than -3 / 2", result3, is(true));
+
+        Rational value7 = new Rational(-(Integer.MAX_VALUE));
+        Rational value8 = new Rational(Integer.MIN_VALUE);
+        boolean result4 = value7.lessThan(value8);
+        assertThat("-MAX should not be less than MIN", result4, is(false));
+
+        Rational value9 = new Rational(5);
+        boolean result5 = value9.lessThan(value9);
+        assertThat("5 should not be less than itself", result5, is(false));
+
+        Rational value10 = new Rational(-2,5);
+        Rational value11 = new Rational(1,9);
+        boolean result6 = value10.lessThan(value11);
+        assertThat("-2 / 5 should be less than 1 / 9", result6);
     }
 
     public void testIsZero(){
@@ -657,6 +758,14 @@ public class RationalTest
         Rational value4 = new Rational(7,-7);
         String result4 = value4.toString();
         assertThat("-7 / 7 should be represented as -1", result4, is("-1"));
+
+        Rational value5 = new Rational(6,2);
+        String result5 = value5.toString();
+        assertThat("6 / 2 should be represented as 3", result5, is("3"));
+
+        Rational value6 = new Rational(4,14);
+        String result6 = value6.toString();
+        assertThat("4 / 14 should be represented as 2/7", result6, is("2/7"));
     }
 
     public void testCompareTo(){

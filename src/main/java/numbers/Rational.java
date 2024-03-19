@@ -25,6 +25,10 @@ public class Rational extends Number implements Comparable<Number>{
     }
     //two input constructor
     public Rational(int a, int b) {
+      if(a == 0 && b != 0){
+         b = 1;
+      }
+
        if (b == 0) {
            throw new IllegalArgumentException("Denominator cannot be zero");
        }
@@ -37,16 +41,18 @@ public class Rational extends Number implements Comparable<Number>{
          throw new IllegalArgumentException("Overflow will occur");
        }
 
+       // MAX / MIN
+       if(a == Integer.MAX_VALUE && b == Integer.MIN_VALUE){
+         throw new IllegalArgumentException("Overflow will occur");
+       }
+
        // MIN / MIN
        if(a == Integer.MIN_VALUE && b == Integer.MIN_VALUE){
-         a = 1;
-         b = 1;
+         throw new IllegalArgumentException("Overflow will occur");
        }
-       // 1 / MIN (only rational that will always have a negative in the denominator)
+       // 1 / MIN (negative in denom and can not change it, so overflow occurs)
        if(a == 1 && b == Integer.MIN_VALUE){
-         this.numerator = 1;
-         this.denominator = Integer.MIN_VALUE;
-         return;
+         throw new IllegalArgumentException("Overflow will occur");
        }
        // POSITIVE / MIN (could have a negative in the denominator if no common divisor exists between the numerator and MIN)
        //note: Math.abs function does nothing to MIN 
@@ -270,6 +276,9 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public boolean equals(Object o){
+      if(o instanceof Rational){
+         return (this.numerator == ((Rational)o).numerator && this.denominator == ((Rational)o).denominator);
+      }
       if (o != null && o instanceof Integer){
          //no integer is equal to a rational number that has a non-one denominator
          if(this.denominator != 1){
