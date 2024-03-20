@@ -1,5 +1,7 @@
 package numbers;
 
+import java.math.BigInteger;
+
 public class Rational extends Number implements Comparable<Number>{
 //TODO: do all the integer overflow checking for the functions that need this check. Function requirements are here: https://reimagined-train-wl296om.pages.github.io/client_complete_specification.html
 
@@ -30,76 +32,18 @@ public class Rational extends Number implements Comparable<Number>{
       }
 
        if (b == 0) {
-           throw new IllegalArgumentException("Denominator cannot be zero");
+         throw new IllegalArgumentException("Denominator cannot be zero");
        }
-       //integer overflow: abs(INTEGER MIN) = INTEGER MAX + 1 
-       //in other words, the absolute value of INTEGER MIN would result in overflow
-       if(a == Integer.MIN_VALUE && b == -1){
-         throw new IllegalArgumentException("Overflow will occur");
+       if(b == Integer.MIN_VALUE){
+         throw new IllegalArgumentException("Denominator cannot be MIN");
        }
-       if(a == -1 && b == Integer.MIN_VALUE){
-         throw new IllegalArgumentException("Overflow will occur");
-       }
-
-       // MAX / MIN
-       if(a == Integer.MAX_VALUE && b == Integer.MIN_VALUE){
-         throw new IllegalArgumentException("Overflow will occur");
-       }
-
-       // MIN / MIN
-       if(a == Integer.MIN_VALUE && b == Integer.MIN_VALUE){
-         throw new IllegalArgumentException("Overflow will occur");
-       }
-       // 1 / MIN (negative in denom and can not change it, so overflow occurs)
-       if(a == 1 && b == Integer.MIN_VALUE){
-         throw new IllegalArgumentException("Overflow will occur");
-       }
-       // POSITIVE / MIN (could have a negative in the denominator if no common divisor exists between the numerator and MIN)
-       //note: Math.abs function does nothing to MIN 
-       if(a > 0 && b == Integer.MIN_VALUE){
-         int gcd = gcd(a, b);
-         if(gcd != 1){
-            this.numerator = -a / gcd;
-            this.denominator = -(b / gcd);
-         }
-         else{
-            this.numerator = a;
-            this.denominator = b;
-         }
-         return;
-       }
-       // NEGATIVE / MIN (wont overflow if MIN can be "reduced", otherwise overflow will occur)
-       if(a < 0 && b == Integer.MIN_VALUE){
-         int gcd = gcd(Math.abs(a), b);
-         if (gcd == 1){
-            throw new IllegalArgumentException("Overflow will occur");
-         }
-         else{
-            this.numerator = -(a / gcd);
-            this.denominator = -(b / gcd);
-         }
-         return;
-       }
-
-       // MIN / NEGATIVE (might need the MIN to be divided somehow, if the gcd is 1, then we cant decrease the min and overflow happens)
-       if(a == Integer.MIN_VALUE && b < 0){
-         int gcd = gcd(a, Math.abs(b));
-         if(gcd == 1){
-            throw new IllegalArgumentException("Overflow will occur");
-         }
-         else{
-            this.numerator = -(a / gcd);
-            this.denominator = -(b / gcd);
-         }
-         return;
-       }
-
-       //MIN / POSITIVE
-       //logic below handles this
 
 
        //if both negative, you can simplify by making both positive
        if (a < 0 && b < 0) {
+         if(a == Integer.MIN_VALUE){
+            throw new IllegalArgumentException("Overflow will occur");
+         }
          a = -1 * a;
          b = -1 * b;
       }
@@ -134,27 +78,22 @@ public class Rational extends Number implements Comparable<Number>{
          throw new IllegalArgumentException("Overflow will occur");
       }
 
-      Rational newRational = new Rational(this.numerator * -1, this.denominator);
-      return newRational;
+      return new Rational(this.numerator * -1, this.denominator);
     }
 
     public Rational reciprocal(){
       if(this.numerator != 0){
-         //overflow testing happens in constructor
-         Rational newRational = new Rational(this.denominator, this.numerator);
-         return newRational;
+         if(this.numerator == Integer.MIN_VALUE){
+            throw new IllegalArgumentException("Overflow will occur");
+         }
+         return new Rational(this.denominator, this.numerator);
       }
       else{
          throw new IllegalArgumentException("Can not find the reciprocal of zero");
       }
     }
-   //  public Rational change(int x, int y){
-   //    this.numerator = x;
-   //    this.denominator = y;
-   //    return this;
-   //  }
-
-   public Rational times(Rational r){
+   
+   public Rational times(Rational r){ //might have to change
       long result1 = this.numerator * r.numerator;
       long result2 = this.denominator * r.denominator;
 
@@ -169,11 +108,10 @@ public class Rational extends Number implements Comparable<Number>{
       int newNumerator = this.numerator * r.numerator;
       int newDenominator = this.denominator * r.denominator;
       //takes care of negatives and simplifying the fraction if needed
-      Rational newRational = new Rational(newNumerator, newDenominator);
-      return newRational;
+      return new Rational(newNumerator, newDenominator);
    }
 
-   public Rational plus(Rational r){
+   public Rational plus(Rational r){//might have to change
       //testing overflow
       long result1 = this.numerator * r.denominator;
       long result2 = r.numerator * this.denominator;
@@ -205,11 +143,10 @@ public class Rational extends Number implements Comparable<Number>{
       int newNumerator = (this.numerator * r.denominator) + (r.numerator * this.denominator);
       int newDenominator = this.denominator * r.denominator;
 
-      Rational newRational = new Rational(newNumerator, newDenominator);
-      return newRational;
+      return new Rational(newNumerator, newDenominator);
    }
 
-   public Rational minus(Rational r){
+   public Rational minus(Rational r){ //might have to change
       if(this.numerator == r.numerator && this.denominator == r.denominator){
          return new Rational();
       }
@@ -224,12 +161,16 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public Rational dividedBy(Rational r){
-      Rational newFraction = r.reciprocal();
-      Rational newRational = this.times(newFraction);
-      return newRational;
+      if(r.numerator == 0){
+         throw new IllegalArgumentException("Can not divide by zero");
+      }
+      return this.times(r.reciprocal());
    }
 
    public Rational raisedToThePowerOf(int n){
+      if(n == 0){
+         return new Rational(1);
+      }
       if(n < 0 && this.numerator == 0){
          throw new IllegalArgumentException("Can not raise a zero to a negative power");
       }
@@ -252,8 +193,7 @@ public class Rational extends Number implements Comparable<Number>{
                throw new IllegalArgumentException("Overflow will occur");
             }
 
-            Rational newRational = new Rational(newNumerator, newDenominator);
-            return newRational;
+            return new Rational(newNumerator, newDenominator);
          }
          //if non-negative exponent, do normal operations
          double result1 = Math.pow(this.numerator,n);
@@ -270,8 +210,7 @@ public class Rational extends Number implements Comparable<Number>{
             throw new IllegalArgumentException("Overflow will occur");
          }
 
-         Rational newRational = new Rational(newNumerator, newDenominator);
-         return newRational;
+         return new Rational(newNumerator, newDenominator);
       }
    }
 

@@ -156,9 +156,7 @@ public class RationalTest
         assertThat("MIN / 7 = MIN / 7", value20.numerator(), is(Integer.MIN_VALUE));
         assertThat("MIN / 7 = MIN / 7", value20.denominator(), is(7));
 
-        Rational value21 = new Rational(2, Integer.MIN_VALUE);
-        assertThat("2 / MIN = -1 / (MIN/2)", value21.numerator(), is(-1));
-        assertThat("2 / MIN = -1 / (MIN/2)", value21.denominator(), is(-(Integer.MIN_VALUE/2)));
+        assertThrows(IllegalArgumentException.class, () -> new Rational(2, Integer.MIN_VALUE));
 
         assertThrows(IllegalArgumentException.class, () -> new Rational(1, Integer.MIN_VALUE));
 
@@ -169,17 +167,11 @@ public class RationalTest
         //test for negative number as numerator and MIN as demoninator
         assertThrows(IllegalArgumentException.class, () -> new Rational(-7, Integer.MIN_VALUE));
 
-        Rational value24 = new Rational(-2, Integer.MIN_VALUE);
-        assertThat("-2 / MIN = 1 / +(MIN/2)", value24.numerator(), is(1));
-        assertThat("-2 / MIN = 1 / +(MIN/2)", value24.denominator(), is(-(Integer.MIN_VALUE/2)));
+        assertThrows(IllegalArgumentException.class, () -> new Rational(-2, Integer.MIN_VALUE));
 
-        Rational value25 = new Rational(7 , Integer.MIN_VALUE);
-        assertThat("7 / MIN = 7 / MIN", value25.numerator(), is(7));
-        assertThat("7 / MIN = 7 / MIN", value25.denominator(), is(Integer.MIN_VALUE));
+        assertThrows(IllegalArgumentException.class, () -> new Rational(7, Integer.MIN_VALUE));
 
-        Rational value26 = new Rational(Integer.MIN_VALUE, -2);
-        assertThat("MIN / -2 = +(MIN/2) / 1", value26.numerator(), is(-(Integer.MIN_VALUE/2)));
-        assertThat("MIN / -2 = +(MIN/2) / 1", value26.denominator(), is(1));
+        assertThrows(IllegalArgumentException.class, () -> new Rational(Integer.MIN_VALUE, -2));
 
         //MAX is a prime number, who knew
         Rational value27 = new Rational(Integer.MAX_VALUE, -2);
@@ -247,12 +239,6 @@ public class RationalTest
         Rational reciprocal2 = value4.reciprocal();
         assertThat("the numerator should be -7", reciprocal2.numerator(), is(-7));
         assertThat("the denominator should be 1", reciprocal2.denominator(), is(1));
-
-        Rational value5 = new Rational(2, Integer.MIN_VALUE);
-        //rational turns into (MIN/2) / 1
-        Rational reciprocal3 = value5.reciprocal();
-        assertThat("the numerator should be MIN/2", reciprocal3.numerator(), is(Integer.MIN_VALUE/2));
-        assertThat("the denominator should be 1", reciprocal3.denominator(), is(1));
 
         Rational value6 = new Rational(Integer.MAX_VALUE, Integer.MIN_VALUE + 2);
         Rational reciprocal4 = value6.reciprocal();
@@ -540,6 +526,11 @@ public class RationalTest
         Rational result5 = value13.raisedToThePowerOf(Integer.MAX_VALUE);
         assertThat("the numerator should be", result5.numerator(), is(1));
         assertThat("the denominator should be", result5.denominator(), is(1));
+
+        Rational value14 = new Rational(Integer.MAX_VALUE);
+        Rational result6 = value14.raisedToThePowerOf(0);
+        assertThat("the numerator should be", result6.numerator(), is(1));
+        assertThat("the denominator should be", result6.denominator(), is(1));
 
     }
     
