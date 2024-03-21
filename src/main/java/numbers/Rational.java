@@ -25,6 +25,15 @@ public class Rational extends Number implements Comparable<Number>{
       }
       return Math.abs(a);
     }
+
+    private BigInteger gcd(BigInteger a, BigInteger b) {
+      while (!b.equals(BigInteger.ZERO)) {
+         BigInteger temp = b;
+         b = a.mod(b);
+         a = temp;
+      }
+      return a.abs();
+   }
     //two input constructor
     public Rational(int a, int b) {
       if(a == 0 && b != 0){
@@ -94,56 +103,78 @@ public class Rational extends Number implements Comparable<Number>{
     }
    
    public Rational times(Rational r){ //might have to change
-      long result1 = this.numerator * r.numerator;
-      long result2 = this.denominator * r.denominator;
-
-      //testing if multiplication will overflow
-      if(this.numerator != result1 / r.numerator){
-         throw new IllegalArgumentException("Overflow will occur");
-      }
-      if(this.denominator != result2 / r.denominator){
+      int gcd = gcd(this.denominator, r.denominator);
+      if(this.denominator / gcd > Integer.MAX_VALUE / r.denominator){
          throw new IllegalArgumentException("Overflow will occur");
       }
 
-      int newNumerator = this.numerator * r.numerator;
-      int newDenominator = this.denominator * r.denominator;
+      BigInteger numerator1 = BigInteger.valueOf(this.numerator);
+      BigInteger numerator2 = BigInteger.valueOf(r.numerator);
+      BigInteger denominator1 = BigInteger.valueOf(this.denominator);
+      BigInteger denominator2 = BigInteger.valueOf(r.denominator);
+
+      BigInteger newNum = numerator1.multiply(numerator2);
+      BigInteger newDenom = denominator1.multiply(denominator2);
+      BigInteger gcd2 = gcd(newNum, newDenom);
+
+
+      newNum = newNum.divide(gcd2);
+      newDenom = newDenom.divide(gcd2);
+
+      BigInteger max = BigInteger.valueOf(Integer.MAX_VALUE);
+      BigInteger min = BigInteger.valueOf(Integer.MIN_VALUE);
+
+      if(newNum.compareTo(max) > 0){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+      if(newNum.compareTo(min) < 0){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
       //takes care of negatives and simplifying the fraction if needed
-      return new Rational(newNumerator, newDenominator);
+      int newNum2 = newNum.intValue();
+      int newDenom2 = newDenom.intValue();
+      return new Rational(newNum2, newDenom2);
    }
 
-   public Rational plus(Rational r){//might have to change
+   public Rational plus(Rational r){
       //testing overflow
-      long result1 = this.numerator * r.denominator;
-      long result2 = r.numerator * this.denominator;
-      long result3 = this.denominator * r.denominator;
-      int result4 = (this.numerator * r.denominator) + (r.numerator * this.denominator);
+      //need to use BigInteger
+      int gcd = gcd(this.denominator, r.denominator);
+      if(this.denominator / gcd > Integer.MAX_VALUE / r.denominator){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+
+      BigInteger numerator1 = BigInteger.valueOf(this.numerator);
+      BigInteger numerator2 = BigInteger.valueOf(r.numerator);
+      BigInteger denominator1 = BigInteger.valueOf(this.denominator);
+      BigInteger denominator2 = BigInteger.valueOf(r.denominator);
+
+      BigInteger x = numerator1.multiply(denominator2);
+      BigInteger y = numerator2.multiply(denominator1);
+      BigInteger newNum = x.add(y);
+
+      BigInteger newDenom = denominator1.multiply(denominator2);
+      BigInteger gcd2 = gcd(newNum, newDenom);
+      newNum = newNum.divide(gcd2);
+      newDenom = newDenom.divide(gcd2);
+
+      BigInteger max = BigInteger.valueOf(Integer.MAX_VALUE);
+      BigInteger min = BigInteger.valueOf(Integer.MIN_VALUE);
 
       //checking if the multiplication will overflow
-      if(this.numerator != result1 / r.denominator){
+      if(newNum.compareTo(max) > 0){
          throw new IllegalArgumentException("Overflow will occur");
       }
 
-      if(r.numerator != result2 / this.denominator){
+      if(newNum.compareTo(min) < 0){
          throw new IllegalArgumentException("Overflow will occur");
       }
+      int newNum2 = newNum.intValue();
+      int newDenom2 = newDenom.intValue();
 
-      if(this.denominator != result3 / r.denominator){
-         throw new IllegalArgumentException("Overflow will occur");
-      }
-
-      //checking if the adding will overflow
-      if((this.numerator * r.denominator) > 0 && (r.numerator * this.denominator) > 0 && result4 <= 0){
-         throw new IllegalArgumentException("Overflow will occur");
-      }
-
-      if((this.numerator * r.denominator) < 0 && (r.numerator * this.denominator) < 0 && result4 >= 0){
-         throw new IllegalArgumentException("Overflow will occur");
-      }
-      
-      int newNumerator = (this.numerator * r.denominator) + (r.numerator * this.denominator);
-      int newDenominator = this.denominator * r.denominator;
-
-      return new Rational(newNumerator, newDenominator);
+      return new Rational(newNum2, newDenom2);
    }
 
    public Rational minus(Rational r){ //might have to change
@@ -151,9 +182,7 @@ public class Rational extends Number implements Comparable<Number>{
          return new Rational();
       }
       else if(r.numerator != 0){
-         Rational minusOne = new Rational(-1);
-         Rational newR = minusOne.times(r);
-         return this.plus(newR);
+         return this.plus(r.opposite());
       }
       else{
          return this;
@@ -174,44 +203,28 @@ public class Rational extends Number implements Comparable<Number>{
       if(n < 0 && this.numerator == 0){
          throw new IllegalArgumentException("Can not raise a zero to a negative power");
       }
-      else{
-         if(n < 0){
-            //if negative exponent, make it positive and flip the fraction
-            int newN = -n;
-            
-            double result1 = Math.pow(this.denominator, newN);
-            double result2 = Math.pow(this.numerator, newN);
-
-            int newNumerator = (int) Math.pow(this.denominator, newN);
-            int newDenominator = (int) Math.pow(this.numerator, newN);
-
-            //testing for overflow
-            if(result1 != newNumerator){
-               throw new IllegalArgumentException("Overflow will occur");
-            }
-            if(result2 != newDenominator){
-               throw new IllegalArgumentException("Overflow will occur");
-            }
-
-            return new Rational(newNumerator, newDenominator);
-         }
-         //if non-negative exponent, do normal operations
-         double result1 = Math.pow(this.numerator,n);
-         double result2 = Math.pow(this.denominator,n);
-
-         int newNumerator = (int) Math.pow(this.numerator, n);
-         int newDenominator = (int) Math.pow(this.denominator, n);
-
-         //testing for overflow
-         if(result1 != newNumerator){
-            throw new IllegalArgumentException("Overflow will occur");
-         }
-         if(result2 != newDenominator){
-            throw new IllegalArgumentException("Overflow will occur");
-         }
-
-         return new Rational(newNumerator, newDenominator);
+      if(n == Integer.MIN_VALUE){
+         throw new IllegalArgumentException("Overflow will occur");
       }
+      int x = 1;
+      int y = 1;
+
+      try{
+         for(int i=0; i < Math.abs(n); i++){
+            x = Math.multiplyExact(x, this.numerator);
+            y = Math.multiplyExact(y, this.denominator);
+         }
+      }
+      catch(ArithmeticException overflowArithmeticException){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+      
+      int x1 = x;
+      int y1 = y;
+      if(n < 0){
+         return new Rational(y1,x1);
+      }
+      return new Rational(x1,y1);
    }
 
    public boolean equals(Object o){

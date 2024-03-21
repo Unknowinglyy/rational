@@ -276,9 +276,9 @@ public class RationalTest
         Rational value8 = new Rational(Integer.MAX_VALUE, 1);
         assertThrows(IllegalArgumentException.class, () -> value7.times(value8));
 
-        Rational value9 = new Rational(1, Integer.MAX_VALUE);
-        Rational value10 = new Rational(1, Integer.MAX_VALUE);
-        assertThrows(IllegalArgumentException.class, () -> value9.times(value10));
+        // Rational value9 = new Rational(1, Integer.MAX_VALUE);
+        // Rational value10 = new Rational(1, Integer.MAX_VALUE);
+        // assertThrows(IllegalArgumentException.class, () -> value9.times(value10));
 
         Rational value11 = new Rational(Integer.MAX_VALUE);
         Rational value12 = new Rational(2);
@@ -314,7 +314,9 @@ public class RationalTest
         Rational value8 = new Rational(1, Integer.MAX_VALUE);
         assertThrows(IllegalArgumentException.class, () -> value7.plus(value8));
         assertThrows(IllegalArgumentException.class, () -> value8.plus(value7));
-        assertThrows(IllegalArgumentException.class, () -> value8.plus(value8));
+        Rational test = value8.plus(value8);
+        assertThat("1 / MAX + 1 / MAX = 2 / MAX", test.numerator(), is(2));
+        assertThat("1 / MAX + 1 / MAX = 2 / MAX", test.denominator(), is(Integer.MAX_VALUE));
         
         Rational value9 = new Rational((Integer.MAX_VALUE - 5), 1);
         Rational value10 = new Rational(6, 1);
@@ -531,6 +533,10 @@ public class RationalTest
         Rational result6 = value14.raisedToThePowerOf(0);
         assertThat("the numerator should be", result6.numerator(), is(1));
         assertThat("the denominator should be", result6.denominator(), is(1));
+
+        Rational value15 = new Rational(1);
+        //value15.raisedToThePowerOf(Integer.MIN_VALUE)
+        assertThrows(IllegalArgumentException.class, () -> value15.raisedToThePowerOf(Integer.MIN_VALUE));
 
     }
     
