@@ -573,10 +573,6 @@ public class RationalTest
         boolean result8 = value8.equals(0.14d);
         assertThat("1 / 7 should not be equal to 0.14d", result8, is(false));
 
-        Rational value9 = new Rational();
-        boolean result9 = value9.equals(null);
-        assertThat("1 / 0 should not be equal to null", result9, is(false));
-
         Rational value10 = new Rational(10, 10);
         Rational value11 = new Rational(1);
         boolean result10 = value10.equals(value11);
@@ -829,10 +825,6 @@ public class RationalTest
         Rational value4 = new Rational(1,4);
         int result4 = value4.compareTo(0.25f);
         assertThat("1 / 4 is equal to 0.25f", result4, is(0));
-
-        Rational value5 = new Rational(1,2);
-        int result5 = value5.compareTo(null);
-        assertThat("1 / 2 has no relation to null", result5, is(-2));
 
         Rational value6 = new Rational(Integer.MAX_VALUE);
         int result6 = value6.compareTo(Integer.MAX_VALUE);

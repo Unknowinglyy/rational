@@ -36,18 +36,15 @@ public class Rational extends Number implements Comparable<Number>{
    }
     //two input constructor
     public Rational(int a, int b) {
-      if(a == 0 && b != 0){
-         b = 1;
+      if (b == 0 || b == Integer.MIN_VALUE) {
+         throw new IllegalArgumentException("Invalid denominator");
+       }
+
+      if(a == 0){
+         this.numerator = a;
+         this.denominator = 1;
+         return;
       }
-
-       if (b == 0) {
-         throw new IllegalArgumentException("Denominator cannot be zero");
-       }
-       if(b == Integer.MIN_VALUE){
-         throw new IllegalArgumentException("Denominator cannot be MIN");
-       }
-
-
        //if both negative, you can simplify by making both positive
        if (a < 0 && b < 0) {
          if(a == Integer.MIN_VALUE){
@@ -91,22 +88,16 @@ public class Rational extends Number implements Comparable<Number>{
     }
 
     public Rational reciprocal(){
-      if(this.numerator != 0){
-         if(this.numerator == Integer.MIN_VALUE){
-            throw new IllegalArgumentException("Overflow will occur");
-         }
-         return new Rational(this.denominator, this.numerator);
-      }
-      else{
+      if(this.numerator == 0){
          throw new IllegalArgumentException("Can not find the reciprocal of zero");
       }
+      if(this.numerator == Integer.MIN_VALUE){
+         throw new IllegalArgumentException("Overflow will occur");
+      }
+      return new Rational(this.denominator, this.numerator);
     }
    
    public Rational times(Rational r){ //might have to change
-      int gcd = gcd(this.denominator, r.denominator);
-      if(this.denominator / gcd > Integer.MAX_VALUE / r.denominator){
-         throw new IllegalArgumentException("Overflow will occur");
-      }
 
       BigInteger numerator1 = BigInteger.valueOf(this.numerator);
       BigInteger numerator2 = BigInteger.valueOf(r.numerator);
@@ -124,11 +115,11 @@ public class Rational extends Number implements Comparable<Number>{
       BigInteger max = BigInteger.valueOf(Integer.MAX_VALUE);
       BigInteger min = BigInteger.valueOf(Integer.MIN_VALUE);
 
-      if(newNum.compareTo(max) > 0){
+      if(newNum.compareTo(max) > 0 /*|| newDenom.compareTo(max) > 0*/){
          throw new IllegalArgumentException("Overflow will occur");
       }
 
-      if(newNum.compareTo(min) < 0){
+      if(newNum.compareTo(min) < 0 /*|| newDenom.compareTo(min) < 0*/){
          throw new IllegalArgumentException("Overflow will occur");
       }
 
@@ -164,11 +155,11 @@ public class Rational extends Number implements Comparable<Number>{
       BigInteger min = BigInteger.valueOf(Integer.MIN_VALUE);
 
       //checking if the multiplication will overflow
-      if(newNum.compareTo(max) > 0){
+      if(newNum.compareTo(max) > 0 /*|| newDenom.compareTo(max) > 0*/){
          throw new IllegalArgumentException("Overflow will occur");
       }
 
-      if(newNum.compareTo(min) < 0){
+      if(newNum.compareTo(min) < 0 /*|| newDenom.compareTo(min) < 0*/){
          throw new IllegalArgumentException("Overflow will occur");
       }
       int newNum2 = newNum.intValue();
@@ -178,15 +169,10 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public Rational minus(Rational r){ //might have to change
-      if(this.numerator == r.numerator && this.denominator == r.denominator){
+      if(this == r){
          return new Rational();
       }
-      else if(r.numerator != 0){
-         return this.plus(r.opposite());
-      }
-      else{
-         return this;
-      }
+      return this.plus(r.opposite());
    }
 
    public Rational dividedBy(Rational r){
@@ -228,97 +214,50 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public boolean equals(Object o){
+      if(this == o){
+         return true;
+      }
       if(o instanceof Rational){
          return (this.numerator == ((Rational)o).numerator && this.denominator == ((Rational)o).denominator);
       }
-      if (o != null && o instanceof Integer){
-         //no integer is equal to a rational number that has a non-one denominator
-         if(this.denominator != 1){
-            return false;
-         }
-         else if (o.equals(this.numerator)){
+      if (o instanceof Number){
+         int x = this.compareTo((Number)o);
+         if(x == 0){
             return true;
          }
          else{
             return false;
          }
       }
-      else if(o != null && o instanceof Float){
-         //Rational number represented as float
-         float fRational = (float) this.numerator / this.denominator;
-         float diff = Math.abs(fRational - ((Float)o).floatValue());
-         float check = (float) Math.pow(2, -20);
-         if(diff < check){
-            return true;
-         }
-         else{
-            return false;
-         }
-      }
-      else if(o != null && o instanceof Double){
-         //Rational number represented as double
-         double dRational = (double) this.numerator / this.denominator;
-         double diff = Math.abs(dRational - ((Double)o).doubleValue());
-         double check = Math.pow(2,-40);
-         if(diff < check){
-            return true;
-         }
-         else{
-            return false;
-         }
-      }
-      else{
-         return false;
-      }
+      return false;
    }
 
    public boolean greaterThan(Number n){
-      if(n instanceof Float){
-         if(this.floatValue() > n.floatValue()){
+      if(!(n instanceof Rational)){
+         int x = this.compareTo(n);
+         if(x == 1){
             return true;
          }
          else{
             return false;
          }
       }
-      else{
-         if(this.doubleValue() > n.doubleValue()){
-            return true;
-         }
-         else{
-            return false;
-         }
-      }
-   }
-
-   public boolean greaterThan(Rational r){
-      //takes use of the previous function
-      double comparison = (double) r.numerator / r.denominator;
-      return this.greaterThan(comparison);
+      Rational value = (Rational) n;
+      return this.numerator * value.denominator > value.numerator * this.denominator;
    }
 
    public boolean lessThan(Number n){
-      if(n instanceof Float){
-         if(this.floatValue() < n.floatValue()){
+      if(!(n instanceof Rational)){
+         int x = this.compareTo(n);
+         if(x == -1){
             return true;
          }
          else{
             return false;
          }
       }
-      else{
-         if(this.doubleValue() < n.doubleValue()){
-            return true;
-         }
-         else{
-            return false;
-         }
-      }
-   }
-
-   public boolean lessThan(Rational r){
-      double comparison = (double) r.numerator / r.denominator;
-      return this.lessThan(comparison);
+      Rational value = (Rational) n;
+      return this.numerator * value.denominator < value.numerator * this.denominator;
    }
 
    public boolean isZero(){
@@ -326,7 +265,7 @@ public class Rational extends Number implements Comparable<Number>{
    }
 
    public boolean isOne(){
-      return this.numerator == 1;
+      return this.numerator == this.denominator;
    }
 
    public boolean isMinusOne(){
@@ -346,31 +285,35 @@ public class Rational extends Number implements Comparable<Number>{
 
    @Override
    public int compareTo(Number o) {
-      if(o != null){
-         if(this.greaterThan(o)){
-            return 1;
+      if(o instanceof Float){
+         float value = o.floatValue();
+         float difference = Math.abs(this.floatValue() - value);
+         if(difference < Math.pow(2, -20)){
+            return 0;
          }
-         else if(this.lessThan(o)){
+         else if(this.floatValue() < value){
             return -1;
          }
          else{
-            return 0;
+            return 1;
          }
       }
+      double value = o.doubleValue();
+      double difference = Math.abs(this.doubleValue() - value);
+      if(difference < Math.pow(2,-40)){
+         return 0;
+      }
+      else if(this.doubleValue() < value){
+         return -1;
+      }
       else{
-         //going to be the error code for this function
-         return -2;
+         return 1;
       }
    }
 
    @Override
    public int intValue() {
-      if(this.denominator == 1){
-         return this.numerator;
-      }
-      else{
-         return this.numerator / this.denominator;
-      }
+      return this.numerator / this.denominator;
    }
 
    @Override
